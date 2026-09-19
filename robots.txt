@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://homnaro.in/sitemap.xml

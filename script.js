@@ -1,27 +1,16 @@
-const menuButton = document.querySelector('.menu-button');
-const nav = document.querySelector('.nav-links');
-menuButton.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  menuButton.setAttribute('aria-expanded', open);
-});
-document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
-  nav.classList.remove('open');
-  menuButton.setAttribute('aria-expanded', 'false');
-}));
-
-const motionTargets = document.querySelectorAll('.section, .hero-copy, .hero-art');
-motionTargets.forEach(element => element.classList.add('reveal'));
-
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  motionTargets.forEach(element => observer.observe(element));
-} else {
-  motionTargets.forEach(element => element.classList.add('is-visible'));
-}
+(() => {
+  const cfg = window.HOMNARO;
+  const message = encodeURIComponent('Hi Homnaro, I would like to book a home service.');
+  const waUrl = `https://wa.me/${cfg.whatsapp}?text=${message}`;
+  document.querySelectorAll('.whatsapp-link').forEach(link => link.href = waUrl);
+  document.querySelectorAll('[data-phone]').forEach(link => link.href = `tel:${cfg.phone}`);
+  document.querySelectorAll('[data-phone-display]').forEach(item => item.textContent = cfg.phone.replace('+91', '+91 '));
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const grid = document.getElementById('service-grid');
+  if (grid) grid.innerHTML = cfg.services.map(service => `<article class="service-card"><div class="service-icon">${service.icon}</div><h3>${service.name}</h3><p>${service.summary}</p><a href="/${service.slug}/">View Services <span>→</span></a></article>`).join('');
+  const areas = document.getElementById('areas-list');
+  if (areas && cfg.serviceAreas.length) { areas.hidden = false; areas.innerHTML = cfg.serviceAreas.map(area => `<span>${area}</span>`).join(''); }
+  const menu = document.querySelector('.menu-button'), nav = document.querySelector('.nav-links');
+  menu?.addEventListener('click', () => { const opened = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', opened); });
+  nav?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); }));
+})();
